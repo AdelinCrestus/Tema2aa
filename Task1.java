@@ -1,13 +1,51 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Task1 extends Task {
     private int N, M, K;
     private ArrayList<Muchie> muchii;
     private int[][] matAdiacenta;
     private int[][] x;
+    private int numarulVariabilelor;
+    private  boolean solutie;
+    private ArrayList<Integer> variabile = new ArrayList<>();
+    private ArrayList<Integer> persoane = new ArrayList<>();
+
 
     public Task1() {
+    }
+
+    public int getNumarulVariabilelor() {
+        return numarulVariabilelor;
+    }
+
+    public ArrayList<Integer> getPersoane() {
+        return persoane;
+    }
+
+    public void setPersoane(ArrayList<Integer> persoane) {
+        this.persoane = persoane;
+    }
+
+    public void setNumarulVariabilelor(int numarulVariabilelor) {
+        this.numarulVariabilelor = numarulVariabilelor;
+    }
+
+    public boolean isSolutie() {
+        return solutie;
+    }
+
+    public void setSolutie(boolean solutie) {
+        this.solutie = solutie;
+    }
+
+    public ArrayList<Integer> getVariabile() {
+        return variabile;
+    }
+
+    public void setVariabile(ArrayList<Integer> variabile) {
+        this.variabile = variabile;
     }
 
     public int[][] getMatAdiacenta() {
@@ -93,8 +131,12 @@ public class Task1 extends Task {
             int j = 0;
             for( String val : input_String.split( " ")) {
                 switch (j) {
-                    case 0 : {muc.setA(Integer.parseInt(val)); break; }
-                    case 1 : { muc.setB(Integer.parseInt(val)); break; }
+                    case 0 -> {
+                        muc.setA(Integer.parseInt(val));
+                    }
+                    case 1 -> {
+                        muc.setB(Integer.parseInt(val));
+                    }
                 }
                 j++;
             }
@@ -199,11 +241,52 @@ public class Task1 extends Task {
 
     @Override
     public void decipherOracleAnswer() throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new FileReader("sat.sol"));
+        String string;
+        string = bufferedReader.readLine();
+        if(string.compareTo("True") == 0) {
+            solutie = true;
+        }
+        if(string.compareTo("False") == 0) {
+            return;
+        }
 
+        string = bufferedReader.readLine();
+        numarulVariabilelor = Integer.parseInt(string);
+        string = bufferedReader.readLine();
+
+        for(String str: string.split(" ")) {
+            variabile.add(Integer.parseInt(str));
+        }
+        for(Integer var : variabile) {
+            if( var > 0) {
+                for(int i = 1; i <= getK(); i++) {
+                    for (int j = 1; j <= getN(); j++) {
+                        if(var.compareTo(x[i][j]) == 0) {
+                            persoane.add(j);
+                        }
+                    }
+                }
+            }
+        }
+        persoane.sort(Comparator.naturalOrder());
     }
 
     @Override
     public void writeAnswer() throws IOException {
-
+        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(System.out);
+        BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
+        StringBuilder stringBuilder = new StringBuilder();
+        if(solutie) {
+            stringBuilder.append("True\n");
+            for(Integer i : persoane) {
+                stringBuilder.append(i);
+                stringBuilder.append(" ");
+            }
+        } else {
+            stringBuilder.append("False");
+        }
+        bufferedWriter.write(stringBuilder.toString());
+        bufferedWriter.close();
     }
 }

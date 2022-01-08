@@ -6,6 +6,8 @@ class Retele {
         task1.readProblemData();
         task1.formulateOracleQuestion();
         task1.askOracle();
+        task1.decipherOracleAnswer();
+        task1.writeAnswer();
 
     }
 }
