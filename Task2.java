@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class Task1 extends Task {
+public class Task2 extends Task {
     private int N, M, K;
     private ArrayList<Muchie> muchii;
     private int[][] matAdiacenta;
@@ -12,20 +12,56 @@ public class Task1 extends Task {
     private ArrayList<Integer> variabile = new ArrayList<>();
     private ArrayList<Integer> persoane = new ArrayList<>();
 
+    public int getK() {
+        return K;
+    }
 
-    public Task1() {
+    public void setK(int k) {
+        K = k;
+    }
+
+    public int getN() {
+        return N;
+    }
+
+    public void setN(int n) {
+        N = n;
+    }
+
+    public int getM() {
+        return M;
+    }
+
+    public void setM(int m) {
+        M = m;
+    }
+
+    public ArrayList<Muchie> getMuchii() {
+        return muchii;
+    }
+
+    public void setMuchii(ArrayList<Muchie> muchii) {
+        this.muchii = muchii;
+    }
+
+    public int[][] getMatAdiacenta() {
+        return matAdiacenta;
+    }
+
+    public void setMatAdiacenta(int[][] matAdiacenta) {
+        this.matAdiacenta = matAdiacenta;
+    }
+
+    public int[][] getX() {
+        return x;
+    }
+
+    public void setX(int[][] x) {
+        this.x = x;
     }
 
     public int getNumarulVariabilelor() {
         return numarulVariabilelor;
-    }
-
-    public ArrayList<Integer> getPersoane() {
-        return persoane;
-    }
-
-    public void setPersoane(ArrayList<Integer> persoane) {
-        this.persoane = persoane;
     }
 
     public void setNumarulVariabilelor(int numarulVariabilelor) {
@@ -48,67 +84,24 @@ public class Task1 extends Task {
         this.variabile = variabile;
     }
 
-    public int[][] getMatAdiacenta() {
-        return matAdiacenta;
+    public ArrayList<Integer> getPersoane() {
+        return persoane;
     }
 
-    public void setMatAdiacenta(int[][] matAdiacenta) {
-        this.matAdiacenta = matAdiacenta;
-    }
-
-    public int[][] getX() {
-        return x;
-    }
-
-    public void setX(int[][] x) {
-        this.x = x;
-    }
-
-    public Task1(int n, int m, int k, ArrayList<Muchie> muchii) {
-        N = n;
-        M = m;
-        K = k;
-        this.muchii = muchii;
-    }
-
-    public int getN() {
-        return N;
-    }
-
-    public void setN(int n) {
-        N = n;
-    }
-
-    public int getM() {
-        return M;
-    }
-
-    public void setM(int m) {
-        M = m;
-    }
-
-    public int getK() {
-        return K;
-    }
-
-    public void setK(int k) {
-        K = k;
-    }
-
-    public ArrayList<Muchie> getMuchii() {
-        return muchii;
-    }
-
-    public void setMuchii(ArrayList<Muchie> muchii) {
-        this.muchii = muchii;
+    public void setPersoane(ArrayList<Integer> persoane) {
+        this.persoane = persoane;
     }
 
     @Override
     public void solve() throws IOException, InterruptedException {
         readProblemData();
-        formulateOracleQuestion();
-        askOracle();
-        decipherOracleAnswer();
+        setK(1);
+        while (!solutie) {
+            formulateOracleQuestion();
+            askOracle();
+            decipherOracleAnswer();
+            setK(getK() + 1);
+        }
         writeAnswer();
     }
 
@@ -122,9 +115,12 @@ public class Task1 extends Task {
         for (String val: input_String.split(" ")) {
 
             switch (i) {
-                case 0 : { N = Integer.parseInt(val); break; }
-                case 1 : { M = Integer.parseInt(val); break; }
-                case 2 : { K = Integer.parseInt(val); break; }
+                case 0 -> {
+                    N = Integer.parseInt(val);
+                }
+                case 1 -> {
+                    M = Integer.parseInt(val);
+                }
             }
             i++;
         }
@@ -149,45 +145,37 @@ public class Task1 extends Task {
             }
             muchii.add(muc);
         }
+
         matAdiacenta = new int[N+1][N+1];
-        x = new int[K+1][N+1];
         for(Muchie muchie : muchii ) {
             matAdiacenta[muchie.getA()][muchie.getB()] = 1;
             matAdiacenta[muchie.getB()][muchie.getA()] = 1;
         }
-        int numaratoare = 1;
+
+    }
+
+    @Override
+    public void formulateOracleQuestion() throws IOException {
+        x = new int[K+1][N+1];
+        int numaratoare = 1, i;
         for (i = 1 ; i <= K ; i++) {
             for (int j = 1 ; j <= N ; j++) {
                 x[i][j] = numaratoare++;
             }
         }
-    }
 
-    @Override
-    public void formulateOracleQuestion() throws IOException {
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("sat.cnf"));
         ArrayList<Clauza> clauze = new ArrayList<>();
-        for (int i = 1 ; i <= getK() ; i++) {
-            for (int j = 1; j <= getK(); j++) {
-                if (i != j) {
-                    for (int k = 1; k <= getN(); k++) {
-                        for (int l = 1; l <= getN(); l++) {
-                            if (k != l) {
-                                if (matAdiacenta[k][l] == 0) {
-                                    //clauze.add(new Clauza(-x[i][k], -x[j][l]));
-                                    ArrayList<Integer> literali = new ArrayList<>();
-                                    literali.add(-x[i][k]);
-                                    literali.add(-x[j][l]);
-                                    clauze.add(new Clauza(literali));
-                                }
-                            }
-                        }
-                    }
-                }
+
+        for(i = 1; i <= K ; i++) {
+            Clauza clauza = new Clauza();
+            for (int j = 1; j <= N ; j++) {
+                clauza.getLiterali().add(x[i][j]);
             }
+            clauze.add(clauza);
         }
 
-        for (int i = 1 ; i <= getK() ; i++) {
+        for (i = 1 ; i <= getK() ; i++) {
             for (int j = 1; j <= getK(); j++) {
                 if( i != j) {
                     for( int k = 1; k <= getN() ; k++) {
@@ -201,7 +189,7 @@ public class Task1 extends Task {
             }
         }
 
-        for (int i = 1 ; i <= getK() ; i++) {
+        for (i = 1 ;i <= getK() ; i++) {
             for(int k = 1; k <= getN(); k++) {
                 for (int l = 1; l <= getN(); l++) {
                     if( l != k) {
@@ -214,14 +202,18 @@ public class Task1 extends Task {
                 }
             }
         }
-
-
-        for (int i = 1 ; i <= getK() ; i++ ) {
-            Clauza clauza = new Clauza();
-            for (int j = 1 ; j <= getN() ; j++) {
-                clauza.getLiterali().add(x[i][j]);
+        //Clauze ca orice muchie sa aiba cel putin un varf in grup
+        for(i = 1 ; i <= N ; i++) {
+            for(int j = 1 ; j <= N ; j++) {
+                if(matAdiacenta[i][j] == 1) {
+                    ArrayList<Integer> literali = new ArrayList<>();
+                    for(int k = 1; k <= K ; k++) {
+                        literali.add(x[k][i]);
+                        literali.add(x[k][j]);
+                    }
+                    clauze.add(new Clauza(literali));
+                }
             }
-            clauze.add(clauza);
         }
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -241,6 +233,7 @@ public class Task1 extends Task {
         stringBuilder.setLength(stringBuilder.length()-1);
         bufferedWriter.write(stringBuilder.toString());
         bufferedWriter.close();
+
     }
 
     @Override
@@ -281,14 +274,9 @@ public class Task1 extends Task {
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(System.out);
         BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
         StringBuilder stringBuilder = new StringBuilder();
-        if(solutie) {
-            stringBuilder.append("True\n");
-            for(Integer i : persoane) {
-                stringBuilder.append(i);
-                stringBuilder.append(" ");
-            }
-        } else {
-            stringBuilder.append("False");
+        for(Integer i : persoane) {
+            stringBuilder.append(i);
+            stringBuilder.append(" ");
         }
         bufferedWriter.write(stringBuilder.toString());
         bufferedWriter.close();
