@@ -115,12 +115,8 @@ public class Task2 extends Task {
         for (String val: input_String.split(" ")) {
 
             switch (i) {
-                case 0 -> {
-                    N = Integer.parseInt(val);
-                }
-                case 1 -> {
-                    M = Integer.parseInt(val);
-                }
+                case 0 : {N = Integer.parseInt(val); break;}
+                case 1 : {M = Integer.parseInt(val); break; }
             }
             i++;
         }
@@ -131,12 +127,8 @@ public class Task2 extends Task {
             int j = 0;
             for( String val : input_String.split( " ")) {
                 switch (j) {
-                    case 0 -> {
-                        muc.setA(Integer.parseInt(val));
-                    }
-                    case 1 -> {
-                        muc.setB(Integer.parseInt(val));
-                    }
+                    case 0 : {muc.setA(Integer.parseInt(val));break;}
+                    case 1 : {muc.setB(Integer.parseInt(val));break;}
                 }
                 j++;
             }
@@ -166,7 +158,7 @@ public class Task2 extends Task {
 
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("sat.cnf"));
         ArrayList<Clauza> clauze = new ArrayList<>();
-
+/*
         for(i = 1; i <= K ; i++) {
             Clauza clauza = new Clauza();
             for (int j = 1; j <= N ; j++) {
@@ -174,6 +166,8 @@ public class Task2 extends Task {
             }
             clauze.add(clauza);
         }
+
+
 
         for (i = 1 ; i <= getK() ; i++) {
             for (int j = 1; j <= getK(); j++) {
@@ -189,9 +183,11 @@ public class Task2 extends Task {
             }
         }
 
-        for (i = 1 ;i <= getK() ; i++) {
-            for(int k = 1; k <= getN(); k++) {
-                for (int l = 1; l <= getN(); l++) {
+*/
+
+        for (i = 1; i <= getK() ; i++) {
+            for(int k = 1; k < getN(); k++) {
+                for (int l = k+1; l <= getN(); l++) {
                     if( l != k) {
                         //clauze.add(new Clauza(-x[i][k], -x[i][l]));
                         ArrayList<Integer> literali = new ArrayList<>();
@@ -215,6 +211,8 @@ public class Task2 extends Task {
                 }
             }
         }
+
+
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("p cnf ");

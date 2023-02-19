@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class Task1 extends Task {
+public class Task3 extends Task{
     private int N, M, K;
     private ArrayList<Muchie> muchii;
     private int[][] matAdiacenta;
@@ -10,65 +10,9 @@ public class Task1 extends Task {
     private int numarulVariabilelor;
     private  boolean solutie;
     private ArrayList<Integer> variabile = new ArrayList<>();
-    private ArrayList<Integer> persoane = new ArrayList<>();
+    private ArrayList<Variabila> variabilas = new ArrayList<>();
 
-
-    public Task1() {
-    }
-
-    public int getNumarulVariabilelor() {
-        return numarulVariabilelor;
-    }
-
-    public ArrayList<Integer> getPersoane() {
-        return persoane;
-    }
-
-    public void setPersoane(ArrayList<Integer> persoane) {
-        this.persoane = persoane;
-    }
-
-    public void setNumarulVariabilelor(int numarulVariabilelor) {
-        this.numarulVariabilelor = numarulVariabilelor;
-    }
-
-    public boolean isSolutie() {
-        return solutie;
-    }
-
-    public void setSolutie(boolean solutie) {
-        this.solutie = solutie;
-    }
-
-    public ArrayList<Integer> getVariabile() {
-        return variabile;
-    }
-
-    public void setVariabile(ArrayList<Integer> variabile) {
-        this.variabile = variabile;
-    }
-
-    public int[][] getMatAdiacenta() {
-        return matAdiacenta;
-    }
-
-    public void setMatAdiacenta(int[][] matAdiacenta) {
-        this.matAdiacenta = matAdiacenta;
-    }
-
-    public int[][] getX() {
-        return x;
-    }
-
-    public void setX(int[][] x) {
-        this.x = x;
-    }
-
-    public Task1(int n, int m, int k, ArrayList<Muchie> muchii) {
-        N = n;
-        M = m;
-        K = k;
-        this.muchii = muchii;
+    public Task3() {
     }
 
     public int getN() {
@@ -101,6 +45,54 @@ public class Task1 extends Task {
 
     public void setMuchii(ArrayList<Muchie> muchii) {
         this.muchii = muchii;
+    }
+
+    public int[][] getMatAdiacenta() {
+        return matAdiacenta;
+    }
+
+    public void setMatAdiacenta(int[][] matAdiacenta) {
+        this.matAdiacenta = matAdiacenta;
+    }
+
+    public int[][] getX() {
+        return x;
+    }
+
+    public void setX(int[][] x) {
+        this.x = x;
+    }
+
+    public int getNumarulVariabilelor() {
+        return numarulVariabilelor;
+    }
+
+    public void setNumarulVariabilelor(int numarulVariabilelor) {
+        this.numarulVariabilelor = numarulVariabilelor;
+    }
+
+    public boolean isSolutie() {
+        return solutie;
+    }
+
+    public void setSolutie(boolean solutie) {
+        this.solutie = solutie;
+    }
+
+    public ArrayList<Integer> getVariabile() {
+        return variabile;
+    }
+
+    public void setVariabile(ArrayList<Integer> variabile) {
+        this.variabile = variabile;
+    }
+
+    public ArrayList<Variabila> getVariabilas() {
+        return variabilas;
+    }
+
+    public void setVariabilas(ArrayList<Variabila> variabilas) {
+        this.variabilas = variabilas;
     }
 
     @Override
@@ -163,61 +155,25 @@ public class Task1 extends Task {
     public void formulateOracleQuestion() throws IOException {
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("sat.cnf"));
         ArrayList<Clauza> clauze = new ArrayList<>();
-        for (int i = 1 ; i <= getK() ; i++) {
-            for (int j = 1; j <= getK(); j++) {
-                if (i != j) {
-                    for (int k = 1; k <= getN(); k++) {
-                        for (int l = 1; l <= getN(); l++) {
-                            if (k != l) {
-                                if (matAdiacenta[k][l] == 0) {
-                                    //clauze.add(new Clauza(-x[i][k], -x[j][l]));
-                                    ArrayList<Integer> literali = new ArrayList<>();
-                                    literali.add(-x[i][k]);
-                                    literali.add(-x[j][l]);
-                                    clauze.add(new Clauza(literali));
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        for (int i = 1 ; i <= getK() ; i++) {
-            for (int j = 1; j <= getK(); j++) {
-                if( i != j) {
-                    for( int k = 1; k <= getN() ; k++) {
-                        //clauze.add(new Clauza(-x[i][k], -x[j][k]));
-                        ArrayList<Integer> literali = new ArrayList<>();
-                        literali.add(-x[i][k]);
-                        literali.add(-x[j][k]);
-                        clauze.add(new Clauza(literali));
-                    }
-                }
-            }
-        }
-
-        for (int i = 1 ; i <= getK() ; i++) {
-            for(int k = 1; k <= getN(); k++) {
-                for (int l = 1; l <= getN(); l++) {
-                    if( l != k) {
-                        //clauze.add(new Clauza(-x[i][k], -x[i][l]));
-                        ArrayList<Integer> literali = new ArrayList<>();
-                        literali.add(-x[i][k]);
-                        literali.add(-x[i][l]);
-                        clauze.add(new Clauza(literali));
-                    }
-                }
-            }
-        }
-
-
-        for (int i = 1 ; i <= getK() ; i++ ) {
+        for(int i = 1; i <= getN(); i++ ) {
             Clauza clauza = new Clauza();
-            for (int j = 1 ; j <= getN() ; j++) {
-                clauza.getLiterali().add(x[i][j]);
+            for(int j = 1; j <= getK(); j++) {
+                clauza.getLiterali().add(x[j][i]);
             }
             clauze.add(clauza);
+        }
+
+        for (int i = 1; i <= getN(); i++) {
+            for (int j = 1; j <= getN(); j++) {
+                if(matAdiacenta[i][j] == 1) {
+                    for(int k = 1; k <= getK(); k++ ) {
+                        Clauza clauza = new Clauza();
+                        clauza.getLiterali().add(-x[k][j]);
+                        clauza.getLiterali().add(-x[k][i]);
+                        clauze.add(clauza);
+                    }
+                }
+            }
         }
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -242,19 +198,16 @@ public class Task1 extends Task {
     @Override
     public void decipherOracleAnswer() throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new FileReader("sat.sol"));
-        String string;
-        string = bufferedReader.readLine();
+        String string = bufferedReader.readLine();
         if(string.compareTo("True") == 0) {
             solutie = true;
         }
         if(string.compareTo("False") == 0) {
             return;
         }
-
         string = bufferedReader.readLine();
         numarulVariabilelor = Integer.parseInt(string);
         string = bufferedReader.readLine();
-
         for(String str: string.split(" ")) {
             variabile.add(Integer.parseInt(str));
         }
@@ -263,13 +216,19 @@ public class Task1 extends Task {
                 for(int i = 1; i <= getK(); i++) {
                     for (int j = 1; j <= getN(); j++) {
                         if(var.compareTo(x[i][j]) == 0) {
-                            persoane.add(j);
+                            variabilas.add(new Variabila(j,i));
                         }
                     }
                 }
             }
         }
-        persoane.sort(Comparator.naturalOrder());
+        variabilas.sort(new Comparator<Variabila>() {
+            @Override
+            public int compare(Variabila o1, Variabila o2) {
+                return o1.getIndex().compareTo(o2.getIndex());
+            }
+        });
+
     }
 
     @Override
@@ -279,8 +238,8 @@ public class Task1 extends Task {
         StringBuilder stringBuilder = new StringBuilder();
         if(solutie) {
             stringBuilder.append("True\n");
-            for(Integer i : persoane) {
-                stringBuilder.append(i);
+            for(Variabila variabila: variabilas) {
+                stringBuilder.append(variabila.getRegistru());
                 stringBuilder.append(" ");
             }
         } else {
