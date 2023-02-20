@@ -1,0 +1,56 @@
+321CD Crestus Adelin
+
+1. Retele
+Clasa task1 are obiectele:
+ -N, M, K, care reprezinta numarul de noduri, muchii si dimensiunea grupului de persoane cautat
+ - O lista de muchii
+ - Matricea de adiacenta
+ - Matricea x care retine variabilele (x[i][v] = nodul v este al i-lea din grupul bun de persoane
+ - boolean-ul solutie care este true daca exista un astfel de grup si false altfel
+ - variabile
+ - persoane
+
+ readProblemData(): Am citit datele linie cu linie de la stdin. Am pus valorile in campurile
+ corespunzatoare.
+ Apoi am creat matricea de adiacenta si matricea x cu valori de la 1 la N*K
+
+ formulateOracleQuestion(): Problema noastra este de fapt Problema Clicii, dorim sa gasim un subgraf
+ complet de dimensiune K.
+ Intre oricare 2 varfuri din subgraf trebuie sa fie muchie. Deci vom folosi relatia de la punctul b
+ din document
+ Apoi trebuie sa mai punem conditii astfel incat nodul v sa nu fie si pe pozitia i si pe pozitia j
+ in subgraf sau sa existe 2 noduri pentru aceesi pozitie( conditiile de la punctul c)
+
+ Mai raman de pus in fisierul pe care il dam oracolului doar clauzele care asigura cate un nod
+ pentru fiecare pozitie din subgraf
+ Am construit continutul fisierului sat.cnf cu ajutorul unui StringBuilder, pe care l-am scris
+ ulterior in fisier.
+
+ decipherOracleAnswer: Citim din fisierul sat.sol linie cu linie
+ Daca pe prima linie avem True continuam pentru a obtine si valorile variabilelor
+ Parcurgem variabilele intoarse de oracol, iar pentru cele pozitive parcurgem matricea x
+ si facem identificarea cu indicii fiecarei valori, pentru a extrage pozitia in subgraf si valoarea
+ nodului.
+ Daca am gasit adaugam nodul in lista de persoane.
+ La final o sortam crescator pentru ca trebuie sa dam numerele de la 1 la N.
+
+ writeAnswer() : daca solutie == true scriem in fisier : "True" si persoanele obtinute mai sus,
+ altfel scriem la stdin doar "False"
+
+2. Reclame
+
+Clasa Task2 are aceleasi campuri ca si Task1.
+Citim datele problemei, la fel ca la taskul1.
+Apoi pornim cu K de la 1 spre N si incercam sa gasim o solutie a problemei ceruta cat timp oracolul
+nu gaseste o solutie si intoarce False.
+De data asta clauzelelor de la problema anterioara se mai adauga cele generate de faptul ca orice
+muchie trebuie sa aiba minim un nod in grupul esential de persoane.(si se elimina cea care genera
+clauzele pentru conditia ca subgraful sa fie complet).
+
+Descifrarea va fi exact la taskul 1. Daca variabila este pozitiva cautam in matricea x,
+elementul x[i][v] cu valoarea variabilei si adaugam v in lista de persoane din grupul esential.
+
+3. Registre
+Clauzele sunt generate de conditiile sa avem o variabila stocata undeva in orice registru si
+daca avem relatie intre 2 variabile atunci ele sa fie stocate in registri diferiti,
+cu alte cuvinte avem pt orice muchie (v,w) !(xiv ^ xiw) = (-xiv V -xiw)
